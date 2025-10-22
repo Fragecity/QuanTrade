@@ -1,4 +1,5 @@
-name: shiroa::gh_pages
+# .github/workflows/deploy.yml
+name: Deploy shiroa Blog to GitHub Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -14,11 +15,10 @@ permissions:
   id-token: write
   contents: read
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# Allow only one concurrent deployment
 concurrency:
   group: 'pages'
-  cancel-in-progress: false
+  cancel-in-progress: true # 改为 true，自动取消旧的运行
 
 jobs:
   build-gh-pages:
@@ -31,35 +31,65 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+          
       - name: Download font assets
         run: |
           mkdir -p assets/fonts
           curl -L https://github.com/Myriad-Dreamin/shiroa/releases/download/v0.1.0/charter-font-assets.tar.gz | tar -xvz -C assets/fonts/
           curl -L https://github.com/Myriad-Dreamin/shiroa/releases/download/v0.1.5/source-han-serif-font-assets.tar.gz | tar -xvz -C assets/fonts/
+          
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
+        
       - name: Set Node.js 22.x
         uses: actions/setup-node@v3
         with:
           node-version: 22.x
+          
       - name: Install Artifact Cache
         uses: Swatinem/rust-cache@v2
+
+      # --- 这是新增的步骤 ---
+      - name: Install shiroa CLI
+        run: cargo install shiroa
+      # ---------------------
+
+      # --- 这是修改的步骤 ---
       - name: Build Book (Paged Target)
         run: |
-          cargo run --release --bin shiroa -- build --font-path assets/fonts --path-to-root /shiroa/paged/ -w . github-pages/docs
+          # 使用 'shiroa' 而不是 'cargo run ...'
+          # 使用 ${{ github.event.repository.name }} 自动获取你的仓库名称
+          shiroa build \
+            --font-path assets/fonts \
+            --path-to-root /${{ github.event.repository.name }}/paged/ \
+            -w . \
+            github-pages/docs
+          
+          # 下面的 mv 命令保持不变，因为它们是 shiroa 示例的构建逻辑
           mv ./github-pages/dist/ ./github-pages/dist-paged/
           mkdir -p ./github-pages/dist/
           mv ./github-pages/dist-paged ./github-pages/dist/paged
-      - name: Build Book
+          
+      # --- 这是修改的步骤 ---
+      - name: Build Book (Static HTML Target)
         run: |
-          cargo run --release --bin shiroa -- build --font-path assets/fonts --path-to-root /shiroa/ -w . github-pages/docs --mode static-html
+          # 使用 'shiroa' 而不是 'cargo run ...'
+          shiroa build \
+            --font-path assets/fonts \
+            --path-to-root /${{ github.event.repository.name }}/ \
+            -w . \
+            github-pages/docs \
+            --mode static-html
+            
       - name: Setup Pages
         uses: actions/configure-pages@v5
+        
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload `/github-pages` sub directory
+          # 上传的路径保持不变
           path: './github-pages/dist'
+          
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
