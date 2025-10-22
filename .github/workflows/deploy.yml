@@ -51,8 +51,8 @@ jobs:
 
       # --- 这是新增的步骤 ---
       - name: Install shiroa CLI
-        run: cargo install shiroa
-      # ---------------------
+        # run: cargo install shiroa
+        run: cargo install --git https://github.com/Myriad-Dreamin/shiroa --locked shiroa
 
       # --- 这是修改的步骤 ---
       - name: Build Book (Paged Target)
