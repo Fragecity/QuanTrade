@@ -1,0 +1,19 @@
+[project]
+name = "quantrade"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["yFinData"]
+
+[dependency-groups]
+dev = ["pytest>=8.4.2", "pytest-cov>=7.0"]
+
+[tool.uv.workspace]
+members = [
+    ".",
+    "lib/yFinData"
+]
+
+[tool.uv.sources]
+yfindata = { workspace = true }

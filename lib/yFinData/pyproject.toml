@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "yFinData"
+version = "0.1.0"
+description = "A CLI tool for managing stock data with yfinance"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "yfinance>=0.2.37",
+  "click>=8.1.7",
+  "toml>=0.10.2",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8.4.2", "pytest-cov>=7.0"]
+
+[dependency-groups]
+dev = ["pytest>=8.4.2", "pytest-cov>=7.0"]
+
+[project.scripts]
+yFinData = "cli.cli:main"
+
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
