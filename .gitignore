@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Rust
+target/
+Cargo.lock
+
+# uv
+.uv/
+
+# Database
+*.db
+*.db-journal
+
+# Custom data directory
+data/
+
+# AI-generated files
+QWEN.md
+AGENTS.md
+*.ai.md
+.ai/
+**/.qwen/
+**/CODE_REVIEW.md
+**/PROJECT_SUMMARY.md

@@ -1,0 +1,9 @@
+[package]
+name = "QuanTrade"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+yfinance-rs = "0.6.0"
+tokio = { version = "1", features = ["full"] }
+polars = "0.5.1"
