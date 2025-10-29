@@ -1,0 +1,3 @@
+[paths]
+toml = "./data/stock.toml"
+db = "./data/stock.db"
